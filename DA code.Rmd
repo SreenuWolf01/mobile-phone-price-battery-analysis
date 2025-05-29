@@ -1,0 +1,166 @@
+---
+title: "Untitled"
+author: "Sreenivas Annagiri"
+date: "2023-12-01"
+output:
+  word_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r}
+require(alr4)
+library(dplyr)
+library(ggplot2)
+library(readr)
+
+Mobile_price <- read_csv("C:/Users/STSC/Downloads/Mobile_price.csv", 
+    col_types = cols(Battery_Capacity = col_number(), 
+        Price = col_number()))
+#View(Mobile_price)
+
+battery<- Mobile_price %>% 
+  filter(is.na(Battery_Capacity)==FALSE) %>% 
+  select(Battery_Capacity) %>%
+  pull()
+
+price<- Mobile_price  %>% 
+  filter(is.na(Price)==FALSE) %>% 
+  select(Price) %>%
+  pull()
+
+summary(Mobile_price)
+```
+I. Writing Hypothesis for the total_cost and age
+
+**Goal**: Model the relationship between Price(`price`) and Battery_capacity(`battery`).
+
+$Y_i = \beta_0 + \beta_1 X_i + \varepsilon_i$, $\varepsilon_i \overset{iid}{\sim} N(0, \sigma)$
+
+price = $\beta_0$ + $\beta_1$ battery + $\varepsilon$
+
+**Hypotheses**:
+
+$H_0:$ there is no relation between price and battery capacity, a = 0
+
+$H_A:$ there is a relation between price and battery capacity, a != 0
+
+battery capacity independent and price dependent
+
+
+
+II. Checking necessary conditions
+
+i)Linearity of the data
+```{r}
+ggplot(Mobile_price, aes(x = battery, y = price, color = Brand)) +
+  geom_point()
+plot(battery, price)
+mod <- lm(price ~ battery)
+abline(mod, col = "red")
+
+```
+The linearity of the price and battery capacity in this graph appears to be positive, meaning that as the battery capacity increases, so does the price. This is likely because higher battery capacity is a desirable feature in a mobile phone, and therefore, manufacturers charge more for it.
+
+
+
+ii) Normality of the residuals
+```{r}
+# Run SLR model
+mod <- lm(price ~ battery, data = Mobile_price)
+summary_stat <- summary(mod)
+summary_stat
+plot(price ~ battery,data = Mobile_price,
+     xlab="battery",ylab="price",col = "blue")
+abline(mod3, col = "red")
+# Check Normality Assumption
+qqnorm(resid(mod))
+qqline(resid(mod), col = "red")
+
+hist(resid(mod))
+```
+Some of the data points do not fall along the line, suggesting that the data is not normally distributed.
+
+
+```{r}
+3.# Residuals vs. fitted
+plot(resid(mod) ~ fitted(mod), main = "Residuals vs. Fitted")  ## Could also use resid(mod)
+abline(h = 0, col = "red")  
+```
+
+```{r}
+Mobile_price <- Mobile_price %>%
+  mutate(log_price=log(Price))
+
+
+```
+ check assumptions
+ 
+```{r}
+ggplot(Mobile_price, aes(x = log_price, y = battery)) +
+  geom_point()
+
+# Run model with transformed x
+mod_new <- lm(log_price ~ battery, data = Mobile_price)
+
+
+# Check Normality Assumption
+qqnorm(resid(mod_new))
+qqline(resid(mod_new), col = "red")
+
+# Check Equal (Constant) Variance Assumption
+plot(resid(mod_new) ~ fitted(mod_new), main = "Residuals vs. Fitted") 
+abline(h = 0, col = "red") 
+
+```
+ 
+ 
+```{r}
+Mobile_price <- Mobile_price %>%
+  mutate(log_battery=log(battery))
+```
+
+
+```{r}
+ggplot(Mobile_price, aes(x = log_price, y = log_battery)) +
+  geom_point()
+
+# Run model with transformed x
+mod_new1 <- lm(log_price ~ log_battery, data = Mobile_price)
+
+# Check Normality Assumption
+qqnorm(resid(mod_new))
+qqline(resid(mod_new), col = "red")
+
+# Check Equal (Constant) Variance Assumption
+plot(resid(mod_new1) ~ fitted(mod_new), main = "Residuals vs. Fitted") 
+abline(h = 0, col = "red")
+```
+
+
+```{r}
+#Creating a correlogram of the residuals
+acf(mod_new$residuals)
+#if no patterns then the residuals are independent
+```
+
+Statistic summary
+```{r}
+summary_stat <- summary(mod_new)
+summary_stat
+```
+
+
+
+
+
+
