@@ -72,8 +72,11 @@ F-statistic: 106.3 on 1 and 405 degrees of freedom,  p-value: < 2.2e-16
 
 ## Tools and Technologies
 **Language:** R
+
 **Libraries:** alr4, dplyr, ggplot2, readr
+
 **Tools:** RStudio, Jupyter (implied, as Rmd can be run in Jupyter too)
+
 **Limitations and Future Work**
 Our study had some limitations. For instance, some phones with different specifications had the same battery capacity, which could affect the accuracy of our results. 
 
