@@ -64,3 +64,24 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 Residual standard error: 0.5736 on 405 degrees of freedom
 Multiple R-squared:  0.2079, Adjusted R-squared:  0.2059
 F-statistic: 106.3 on 1 and 405 degrees of freedom,  p-value: < 2.2e-16
+```
+## Decision and Conclusion
+**Decision:** We rejected the null hypothesis because the calculated p-value ($< 2.2e-16$) is significantly less than the predetermined alpha value (0.05). 
+
+**Conclusion:** There is sufficient evidence to state that a statistically significant relationship exists between the price and battery capacity of a mobile phone. Therefore, the price of the mobile phone is indeed dependent on its battery capacity. 
+
+## Tools and Technologies
+**Language:** R
+**Libraries:** alr4, dplyr, ggplot2, readr
+**Tools:** RStudio, Jupyter (implied, as Rmd can be run in Jupyter too)
+**Limitations and Future Work**
+Our study had some limitations. For instance, some phones with different specifications had the same battery capacity, which could affect the accuracy of our results. 
+
+Future studies should consider controlling for other factors that may influence mobile phone price and battery performance, such as:
+
+Brand reputation
+Processor speed (RAM, Storage)
+Camera quality (MP)
+Screen size and type
+Operating system
+Release date 
